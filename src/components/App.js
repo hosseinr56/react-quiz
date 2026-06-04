@@ -5,7 +5,7 @@ import Loader from "./Loader";
 import Error from "./Error";
 import Startscreen from "./startscreen";
 import Question from "./Question";
-import { point } from "leaflet";
+import Nexbtn from "./Nextbtn";
 const initialState = {
   questions: [],
   status: "loading",
@@ -38,7 +38,13 @@ function reducer(state, action) {
         ...state,
         answer: action.payload,
         points: action.payload === question.correctOption ? state.points + question.points : state.points
-      };  
+      };
+    case "next":
+      return {
+        ...state,
+        index: state.index + 1,
+        answer: null
+      };    
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
@@ -59,8 +65,13 @@ export default function App() {
         {status === "loading" && <Loader />}
         {status === "ready" && <Startscreen num={num} dispatch={dispatch} />}
         {status === "error" && <Error />}
-        {status === 'active' && <Question questions={questions[index]} dispatch={dispatch} answer={answer} />}
+        {status === 'active' &&
+        <>
+        <Question questions={questions[index]} dispatch={dispatch} answer={answer} />
+        <Nexbtn dispatch={dispatch} answer={answer}/>
+        </>
+        }
       </Main>
     </div>
   );
-}
+} 
