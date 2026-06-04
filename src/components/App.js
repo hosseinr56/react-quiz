@@ -54,6 +54,17 @@ function reducer(state, action) {
         status: "finished",
         highscore: state.points > state.highscore ? state.points : state.highscore
       };
+    case "restart":
+      return{
+        ...initialState , questions:state.questions , status:"ready"
+      };
+      // return{
+      //   ...state,
+      //   status: "ready",
+      //   index: 0,
+      //   answer: null,
+      //   points: 0
+      // }
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
@@ -84,7 +95,7 @@ export default function App() {
         <Nexbtn dispatch={dispatch} answer={answer} index={index} numQuestions={num} />
         </>
         }
-        {status === "finished" && <Finish points={points} maxpossiblepoints={maxpossiblepoints} highscore={highscore}/>}
+        {status === "finished" && <Finish points={points} maxpossiblepoints={maxpossiblepoints} highscore={highscore} dispatch={dispatch}/>}
       </Main>
     </div>
   );
