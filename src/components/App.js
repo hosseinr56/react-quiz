@@ -8,13 +8,17 @@ import Question from "./Question";
 import Nexbtn from "./Nextbtn";
 import Prog from "./prog";
 import Finish from "./Finish";
+import Footer from "./Footer";
+import Timer from "./Timer";
+const Sec_per_question = 30;
 const initialState = {
   questions: [],
   status: "loading",
   index : 0,
   answer: null,
   points:0,
-  highscore: 0
+  highscore: 0,
+  secondRemaning: null,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -33,7 +37,8 @@ function reducer(state, action) {
     case "start":
       return {
         ...state,
-        status: "active"
+        status: "active",
+        secondRemaning: state.questions.length * Sec_per_question
       };
     case "newAnswer":
       const question = state.questions.at(state.index);
@@ -65,12 +70,17 @@ function reducer(state, action) {
       //   answer: null,
       //   points: 0
       // }
+    case "tick":
+      return{
+        ...state , secondRemaning: state.secondRemaning - 1,
+        status: state.secondRemaning === 0 ? 'finish' : state.status,
+      }
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
 }
 export default function App() {
-  const [{questions, status , index, answer , points , highscore} , dispatch] = useReducer(reducer, initialState);
+  const [{questions, status , index, answer , points , highscore , secondRemaning} , dispatch] = useReducer(reducer, initialState);
   const num = questions.length;
 
   const maxpossiblepoints = questions.reduce((prev, cur) => prev + cur.points, 0);
@@ -92,7 +102,10 @@ export default function App() {
         <>
         <Prog index={index} numQuestions={num} points={points} maxpossiblepoints={maxpossiblepoints} answer={answer}></Prog>
         <Question questions={questions[index]} dispatch={dispatch} answer={answer} />
-        <Nexbtn dispatch={dispatch} answer={answer} index={index} numQuestions={num} />
+        <Footer>
+          <Timer dispatch={dispatch} secondRemaning={secondRemaning}/>
+          <Nexbtn dispatch={dispatch} answer={answer} index={index} numQuestions={num} />
+        </Footer>
         </>
         }
         {status === "finished" && <Finish points={points} maxpossiblepoints={maxpossiblepoints} highscore={highscore} dispatch={dispatch}/>}
