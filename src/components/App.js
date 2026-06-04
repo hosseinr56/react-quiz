@@ -6,12 +6,15 @@ import Error from "./Error";
 import Startscreen from "./startscreen";
 import Question from "./Question";
 import Nexbtn from "./Nextbtn";
+import Prog from "./prog";
+import Finish from "./Finish";
 const initialState = {
   questions: [],
   status: "loading",
   index : 0,
   answer: null,
   points:0,
+  highscore: 0
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -45,13 +48,22 @@ function reducer(state, action) {
         index: state.index + 1,
         answer: null
       };    
+    case "finish":
+      return {
+        ...state,
+        status: "finished",
+        highscore: state.points > state.highscore ? state.points : state.highscore
+      };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
 }
 export default function App() {
-  const [{questions, status , index, answer} , dispatch] = useReducer(reducer, initialState);
+  const [{questions, status , index, answer , points , highscore} , dispatch] = useReducer(reducer, initialState);
   const num = questions.length;
+
+  const maxpossiblepoints = questions.reduce((prev, cur) => prev + cur.points, 0);
+
   useEffect(() => {
     fetch("http://localhost:9000/questions")
       .then((res) => res.json())
@@ -67,10 +79,12 @@ export default function App() {
         {status === "error" && <Error />}
         {status === 'active' &&
         <>
+        <Prog index={index} numQuestions={num} points={points} maxpossiblepoints={maxpossiblepoints} answer={answer}></Prog>
         <Question questions={questions[index]} dispatch={dispatch} answer={answer} />
-        <Nexbtn dispatch={dispatch} answer={answer}/>
+        <Nexbtn dispatch={dispatch} answer={answer} index={index} numQuestions={num} />
         </>
         }
+        {status === "finished" && <Finish points={points} maxpossiblepoints={maxpossiblepoints} highscore={highscore}/>}
       </Main>
     </div>
   );
