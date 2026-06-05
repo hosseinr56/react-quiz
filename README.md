@@ -28,28 +28,6 @@ This project was created as part of a learning journey to understand advanced st
 
 ---
 
-## 📁 Project Structure
-
-src/
-├── components/
-│   ├── App.js
-│   ├── Header.js
-│   ├── Main.js
-│   ├── Loader.js
-│   ├── Error.js
-│   ├── Startscreen.js
-│   ├── Question.js
-│   ├── Nextbtn.js
-│   ├── Prog.js
-│   ├── Finish.js
-│   ├── Footer.js
-│   └── Timer.js
-│
-├── index.js
-└── index.css
-
----
-
 ## ⚙️ How It Works
 
 This project is powered by a state machine using useReducer.
