@@ -108,9 +108,3 @@ At the end of the quiz, users will see:
 
 Built by Hossein Ranjbari  
 React learning project (useReducer deep dive)
-
----
-
-## ⭐ Support
-
-If you like this project, please give it a ⭐ on GitHub.
